@@ -1,0 +1,93 @@
+# 河图 (HeTu) 默认配置
+# 用于 development 环境。生产环境用 config/production.yaml 覆盖。
+
+database:
+  postgres:
+    host: localhost
+    port: 5432
+    database: hetu
+    user: hetu
+    password: ${PG_PASSWORD}
+    min_connections: 2
+    max_connections: 10
+    retry:
+      max_attempts: 5
+      backoff_base: 1.0
+      backoff_max: 30.0
+    health_check_interval: 30
+
+data_sources:
+  default: akshare
+  fallback_chain: [akshare, xtdata, csv_cache]
+  realtime: xtdata
+
+brokers:
+  qmt:
+    account: ${QMT_ACCOUNT}
+    trade_password: ${QMT_TRADE_PASSWORD}
+    comm_password: ${QMT_COMM_PASSWORD}
+    account_type: guojin
+  mx:
+    api_key: ${MX_API_KEY}
+    base_url: ${MX_BASE_URL}
+
+risk:
+  max_position_single: 0.05
+  max_position_total: 0.20
+  max_industry_exposure: 0.15
+  max_daily_buy_amount: 200000
+  min_cash_reserve: 1000
+  stop_loss_hard: 0.08
+  stop_loss_atr_multiplier: 2.0
+  stop_loss_atr_window: 20
+  stop_loss_time_days: 20
+  circuit_breaker:
+    daily_loss_pct: 0.02
+    benchmark_drop_pct: 0.03
+    consecutive_stops: 3
+    benchmark_index: "000300.SH"
+
+liquidity_filter:
+  min_daily_amount: 5000000
+  min_market_cap: 3000000000
+  max_position_pct_of_volume: 0.01
+  min_turnover_rate: 0.005
+
+backtest:
+  slippage_model: "fixed"
+  slippage_ticks: 2
+  commission_rate: 0.00025
+  commission_min: 5.0
+  stamp_tax: 0.0005
+  benchmark_index: "000300.SH"
+  adjust_method: "backward"
+  oos_window_days: 252
+
+llm:
+  provider: deepseek
+  model: deepseek-v4-pro
+  api_key: ${DEEPSEEK_API_KEY}
+  max_tokens_per_call: 4000
+  daily_token_limit: 100000
+
+notifications:
+  throttle_window_s: 60
+  channels:
+    wecom:
+      webhook_url: ${WECOM_WEBHOOK_URL}
+    console:
+      enabled: true
+
+web:
+  host: 127.0.0.1
+  port: 8000
+  jwt_secret: ${JWT_SECRET}
+  jwt_expire_hours: 168
+
+scheduler:
+  timezone: Asia/Shanghai
+  jobstore: sqlalchemy
+
+logging:
+  level: INFO
+  dir: logs
