@@ -1,0 +1,94 @@
+# 河图 (HeTu) 配置模板
+# 请复制此文件为 default.yaml，填入实际的配置值
+# 注意：default.yaml 在 .gitignore 中，不会被版本控制
+
+database:
+  postgres:
+    host: localhost
+    port: 5432
+    database: hetu
+    user: hetu
+    password: ${DATABASE_PASSWORD}  # 替换为实际数据库密码
+    min_connections: 2
+    max_connections: 10
+    retry:
+      max_attempts: 5
+      backoff_base: 1.0
+      backoff_max: 30.0
+    health_check_interval: 30
+
+data_sources:
+  default: akshare
+  fallback_chain: [akshare, xtdata, csv_cache]
+  realtime: xtdata
+
+brokers:
+  qmt:
+    account: ${QMT_ACCOUNT}           # 妙想账户
+    trade_password: ${QMT_TRADE_PWD}  # 交易密码
+    comm_password: ${QMT_COMM_PWD}    # 通讯密码
+    account_type: guojin
+  mx:
+    api_key: ${MX_API_KEY}            # 妙想API密钥
+    base_url: "https://mkapi2.dfcfs.com/finskillshub"
+
+risk:
+  max_position_single: 0.05           # 单个持仓上限 5%
+  max_position_total: 0.20            # 总持仓上限 20%
+  max_industry_exposure: 0.15         # 行业敞口上限 15%
+  max_daily_buy_amount: 200000        # 日买入额度限制 20万
+  min_cash_reserve: 1000              # 最低现金储备 1000元
+  stop_loss_hard: 0.08                # 硬止损 8%
+  stop_loss_atr_multiplier: 2.0       # ATR止损倍数
+  stop_loss_atr_window: 20            # ATR计算窗口
+  stop_loss_time_days: 20             # 时间止损天数
+  circuit_breaker:
+    daily_loss_pct: 0.02              # 单日损失熔断 2%
+    benchmark_drop_pct: 0.03          # 基准下跌熔断 3%
+    consecutive_stops: 3              # 连续止损熔断
+    benchmark_index: "000300.SH"      # 基准指数
+
+liquidity_filter:
+  min_daily_amount: 5000000           # 最小日成交额 500万
+  min_market_cap: 3000000000          # 最小市值 30亿
+  max_position_pct_of_volume: 0.01    # 持仓占日成交额上限 1%
+  min_turnover_rate: 0.005            # 最小换手率 0.5%
+
+backtest:
+  slippage_model: "fixed"
+  slippage_ticks: 2
+  commission_rate: 0.00025            # 佣金率 2.5 BP
+  commission_min: 5.0                 # 最低佣金 5元
+  stamp_tax: 0.0005                   # 印花税 5 BP
+  benchmark_index: "000300.SH"
+  adjust_method: "backward"
+  oos_window_days: 252
+
+llm:
+  provider: deepseek
+  model: deepseek-v4-pro
+  api_key: ${DEEPSEEK_API_KEY}        # DeepSeek API密钥
+  max_tokens_per_call: 4000
+  daily_token_limit: 100000
+
+notifications:
+  throttle_window_s: 60               # 消息节流窗口
+  channels:
+    wecom:
+      webhook_url: ${WECOM_WEBHOOK_URL}  # 企业微信Webhook URL
+    console:
+      enabled: true
+
+web:
+  host: 127.0.0.1
+  port: 8000
+  jwt_secret: ${JWT_SECRET}           # JWT密钥，生产环境需修改
+  jwt_expire_hours: 168
+
+scheduler:
+  timezone: Asia/Shanghai
+  jobstore: sqlalchemy
+
+logging:
+  level: INFO
+  dir: logs
