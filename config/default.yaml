@@ -7,7 +7,7 @@ database:
     port: 5432
     database: hetu
     user: hetu
-    password: ${PG_PASSWORD}
+    password: 
     min_connections: 2
     max_connections: 10
     retry:
@@ -23,13 +23,13 @@ data_sources:
 
 brokers:
   qmt:
-    account: ${QMT_ACCOUNT}
-    trade_password: ${QMT_TRADE_PASSWORD}
-    comm_password: ${QMT_COMM_PASSWORD}
+    account: 
+    trade_password: 
+    comm_password: 
     account_type: guojin
   mx:
-    api_key: ${MX_API_KEY}
-    base_url: ${MX_BASE_URL}
+    api_key: "mkt_FUIsA4ViAfAg-va9__KZjARykuXjyaOoFdwnlDtOkuQ"
+    base_url: "https://mkapi2.dfcfs.com/finskillshub"
 
 risk:
   max_position_single: 0.05
@@ -66,7 +66,7 @@ backtest:
 llm:
   provider: deepseek
   model: deepseek-v4-pro
-  api_key: ${DEEPSEEK_API_KEY}
+  api_key: "sk-108d01a6ff1041d49e4b6555842700c8"
   max_tokens_per_call: 4000
   daily_token_limit: 100000
 
@@ -74,14 +74,14 @@ notifications:
   throttle_window_s: 60
   channels:
     wecom:
-      webhook_url: ${WECOM_WEBHOOK_URL}
+      webhook_url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=8b7eeb97-debc-43e7-987a-89c94606560d"
     console:
       enabled: true
 
 web:
   host: 127.0.0.1
   port: 8000
-  jwt_secret: ${JWT_SECRET}
+  jwt_secret: hetu-dev-secret-2026
   jwt_expire_hours: 168
 
 scheduler:
